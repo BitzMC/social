@@ -1,0 +1,57 @@
+on join:
+    if {team.%player%.p} is not set:
+        message "&eYou aren't part of any teams! Ask to join one."
+
+command /team [<text>] [<text>]:
+    trigger:
+        if arg-1 is not set:
+            message "&cDescribe what you need to do."
+            message "&cUsage: &f/team <action>"
+            message "&cIf you are stuck, run &f/team help"
+
+        else if arg-1 is equal to "create":
+            if arg-2 is not set:
+                message "&cWhat team name do you want?"
+                message "&cUsage: &f/team create <name>"
+
+            else:
+                if {team.%player%.p} is not set:
+                    set {team.%player%.p} to arg-2
+                    set {owner.%{team.%player%.p}%.t} to "%player%"
+                    message "&aYou have created the team! Invite somebody with &f/team invite <username>"
+
+                else:
+                    message "&cYou are already in a team."
+
+        else if arg-1 is equal to "name":
+            if {team.%player%.p} is not set:
+                message "&cYou aren't in any teams."
+
+            else:
+                message "&fYou are in the team: %{team.%player%.p}%"
+
+        else if arg-1 is equal to "leave":
+            if {team.%player%.p} is not set:
+                message "&cYou aren't in any teams."
+
+            else if {owner.%{team.%player%.p}%.t} is equal to "%player%":
+                message "&cYou can't leave a team you own."
+
+            else:
+                message "&cYou left the team: &f%{team.%player%.p}%"
+                delete {team.%player%.p}
+        
+        else if arg-1 is equal to "delete":
+            if {team.%player%.p} is not set:
+                message "&cYou aren't in any teams."
+
+            else if {owner.%{team.%player%.p}%.t} is not equal to "%player%":
+                message "&cYou don't own this team. Message the owner if you would like this team deleted."
+
+            else:
+                message "&cYou deleted the team: &f%{team.%player%.p}%"
+                delete {team.%player%.p}
+
+        else:
+            message "&cInvalid argument."
+            message "&cIf you are stuck, run &f/team help"
